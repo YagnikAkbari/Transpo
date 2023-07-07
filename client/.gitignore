@@ -9,10 +9,10 @@
 /coverage
 
 # production
-/src
-/public
-package.json
-package-lock.json
+# /src
+# /public
+# package.json
+# package-lock.json
 
 # misc
 .DS_Store
