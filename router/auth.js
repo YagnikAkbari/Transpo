@@ -7,10 +7,6 @@ require("../db/conn");
 const Manufacturer = require("../model/manufacturerSchema");
 const Transporter = require("../model/transporterSchema");
 
-router.get("/", (req, res) => {
-  res.send("Hello World from Node.js Server from router");
-});
-
 // Register a new transporter and add to database with proptectc password
 router.post("/tregister", async (req, res) => {
   const { uname, email, phone, password, cpassword, vehicleId } = req.body;
