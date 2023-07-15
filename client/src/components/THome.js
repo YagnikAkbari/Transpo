@@ -1,47 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Model from "./Model";
-import Loader from "./loader/Loader";
+import { useSelector } from "react-redux";
 
 const THome = () => {
-  const [orders, setOrders] = useState([]);
-  const [receiver, setReceiver] = useState("");
   const [selectedId, setSelectedId] = useState("");
-  const [loader, setLoader] = useState(true);
 
-  const getTOrders = async function () {
-    try {
-      const res = await fetch("/getTOrder", {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
-
-      const data = await res.json();
-      setReceiver(data.uname);
-      if (!data.orders) {
-        return;
-      }
-      setOrders(data.orders);
-      setLoader(false);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  useEffect(() => {
-    getTOrders();
-  }, []);
+  const orders = useSelector((state) => state.user.user.orders);
+  const receiver = useSelector((state) => state.user.user.uname);
 
   const selectedOrderIdHandler = (e) => {
     setSelectedId(e.target.dataset.id);
   };
-
-  if (loader) {
-    return <Loader />;
-  }
 
   const content = orders.map((ord) => {
     return (
@@ -68,6 +37,7 @@ const THome = () => {
         />
       );
     }
+    return null;
   });
 
   return (
@@ -81,7 +51,7 @@ const THome = () => {
               </div>
             </div>
           )}
-          {orders.length == 0 && !loader && (
+          {orders.length === 0 && (
             <p className="order__items--not-found">No Orders Found!</p>
           )}
         </div>

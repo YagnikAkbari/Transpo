@@ -46,7 +46,7 @@ const TLogin = () => {
             type="submit"
             value="Login"
             name="signin"
-            onClick={loginFunction}
+            onClick={(e) => loginFunction(e)}
           ></input>
           <div className="login-footer">
             <p>
@@ -62,7 +62,7 @@ const TLogin = () => {
         </form>
         <img
           src="https://img.freepik.com/free-vector/filling-system-illustration-concept_114360-832.jpg?size=626&ext=jpg&ga=GA1.2.1540159973.1687596564&semt=sph"
-          alt="Login Image.."
+          alt="Login"
           className="login-image"
         />
         <h1>Login as Transporter</h1>

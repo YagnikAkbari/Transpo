@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { authActions } from "../store/auth";
+import { authActions } from "../store/authSlice";
 
 const Logout = () => {
   const headers = useNavigate();

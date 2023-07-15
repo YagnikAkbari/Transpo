@@ -4,35 +4,17 @@ import Replies from "./Replies";
 import Searchbar from "./Searchbar";
 import OrderForm from "./OrderForm";
 import ModelManf from "./ModelManf";
+import { useSelector } from "react-redux";
 
 const MHome = () => {
-  const [replies, setReplies] = useState([]);
   const [isFiltered, setisFiltered] = useState(false);
   const [filteredReplies, setFilteredReplies] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [searchId, setSearchId] = useState("");
   const [selectedId, setSelectedId] = useState("");
   const [transporterData, setTransporterData] = useState([]);
-  const [loader, setLoader] = useState(true);
 
-  const getMReply = async function () {
-    const res = await fetch("/getMReply", {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
-
-    const data = await res.json();
-    if (!data.repelies) {
-      setReplies([]);
-      return;
-    }
-    setReplies(data.repelies);
-    setLoader(false);
-  };
+  const replies = useSelector((state) => state.user.user.replies);
 
   const getTransporter = async function () {
     const res = await fetch("/getTransporter", {
@@ -49,7 +31,6 @@ const MHome = () => {
 
   useEffect(() => {
     getTransporter();
-    getMReply();
   }, []);
 
   const searchabarHandler = (id) => {
@@ -84,6 +65,7 @@ const MHome = () => {
         <ModelManf className="order__item--data" key={rep.id} order={rep} />
       );
     }
+    return null;
   });
 
   const finalReplies = isFiltered ? filteredReplies : replies;
@@ -117,7 +99,6 @@ const MHome = () => {
             replies={finalReplies}
             searchId={searchId}
             onSelect={selectedOrderIdHandler}
-            loader={loader}
           />
         </div>
         <div id="main-section__manufacturer">{mainSectionContent}</div>

@@ -1,20 +1,12 @@
 import React from "react";
 
-import useFetch from "./hooks/useFetch";
 import THome from "./THome";
 import MHome from "./MHome";
 
+import { useSelector } from "react-redux";
+
 const Home = () => {
-  const user = useFetch({
-    method: "GET",
-    url: "/getData",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-    body: {},
-  });
+  const user = useSelector((state) => state.user.user);
 
   let content;
 

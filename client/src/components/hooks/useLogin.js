@@ -2,8 +2,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToasts } from "react-toast-notifications";
 import { useDispatch } from "react-redux";
-import { authActions } from "../../store/auth";
+import { authActions } from "../../store/authSlice";
 import { toastConfig } from "../utiles/config";
+import { getUser } from "../../store/userSlice";
 
 const useLogin = (config) => {
   const header = useNavigate();
@@ -34,6 +35,13 @@ const useLogin = (config) => {
       addToast(data.message, { appearance: "error", ...toastConfig });
     } else {
       dispatch(authActions.login());
+      dispatch(
+        getUser({
+          url: "/getData",
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        })
+      );
       localStorage.setItem("login", "true");
       header("/");
     }
