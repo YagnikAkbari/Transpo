@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useToasts } from "react-toast-notifications";
 import { useDispatch } from "react-redux";
 import { authActions } from "../../store/authSlice";
-import { toastConfig } from "../utiles/config";
-import { getUser } from "../../store/userSlice";
+import { getUser, userActions } from "../../store/userSlice";
 
 const useLogin = (config) => {
   const header = useNavigate();
@@ -12,8 +10,6 @@ const useLogin = (config) => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const { addToast } = useToasts();
 
   const emailChangeHandler = (e) => setEmail(e.target.value);
   const passwordChangeHandler = (e) => setPassword(e.target.value);
@@ -32,7 +28,9 @@ const useLogin = (config) => {
     const data = await res.json();
 
     if (res.status === 400 || !data) {
-      addToast(data.message, { appearance: "error", ...toastConfig });
+      dispatch(
+        userActions.getToaster({ type: "error", message: data.message })
+      );
     } else {
       dispatch(authActions.login());
       dispatch(

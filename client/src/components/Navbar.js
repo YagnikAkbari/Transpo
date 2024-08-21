@@ -14,7 +14,7 @@ const Navbar = () => {
     if (!isAuthenticated && !isLoggedIn) {
       return headers("/mlogin");
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, isLoggedIn, headers]);
 
   const RenderMenu = function () {
     if (isAuthenticated) {

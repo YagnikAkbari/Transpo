@@ -3,7 +3,7 @@ const app = express();
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 
-dotenv.config({ path: "./config.env" });
+dotenv.config({ path: "./.env" });
 
 const PORT = process.env.PORT || 5000;
 
@@ -12,6 +12,7 @@ require("./db/conn");
 app.use(express.json());
 app.use(cookieParser());
 app.use(require("./router/auth"));
+console.log('process.env', process.env);
 
 if (process.env.NODE_ENV === "production") {
   const path = require("path");

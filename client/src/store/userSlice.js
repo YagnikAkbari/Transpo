@@ -11,11 +11,21 @@ const userSlice = createSlice({
       phone: "",
       vehicleId: "",
       adress: "",
+      toasterData: {
+        type: "",
+        message: "",
+      },
     },
   },
   reducers: {
     addUser(state, action) {
       state.user = action.payload;
+    },
+    getToaster(state, action) {
+      state.toasterData = {
+        type: action.payload.type,
+        message: action.payload.message,
+      };
     },
   },
 });

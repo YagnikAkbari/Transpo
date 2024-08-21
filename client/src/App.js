@@ -17,6 +17,7 @@ import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { authActions } from "./store/authSlice";
 import { useDispatch } from "react-redux";
+import Toaster from "./components/common/Toaster/Toaster";
 
 const Routing = function () {
   return (
@@ -54,6 +55,7 @@ const App = () => {
   return (
     <>
       <ToastProvider>
+        <Toaster />
         <Navbar />
         <Routing />
       </ToastProvider>

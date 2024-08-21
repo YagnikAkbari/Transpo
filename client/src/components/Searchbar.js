@@ -4,7 +4,7 @@ const Searchbar = (props) => {
   const [searched, setSearched] = useState("");
   const searchHandler = function (e) {
     e.preventDefault();
-    if (searched.trim() == "") return;
+    if (searched.trim() === "") return;
     const createdId = `${searched.slice(0, 2).toUpperCase()}${searched.slice(
       2
     )}`;
