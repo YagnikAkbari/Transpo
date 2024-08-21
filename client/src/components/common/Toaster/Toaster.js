@@ -8,19 +8,27 @@ const Toaster = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log('toasterData', toasterData);
+    let timer;
     if (toasterData && toasterData?.type) {
-      setTimeout(() => {
+      timer = setTimeout(() => {
         dispatch(userActions.getToaster({ type: "", message: "" }));
-      }, 3000);      
+      }, 1000);
     }
+    return () => {
+      clearTimeout(timer);
+    };
   }, [toasterData, dispatch]);
 
   return createPortal(
     toasterData && toasterData?.type && (
       <div className={`toaster-container toaster-${toasterData?.type}`}>
         <span className="cross">
-          <i class="fa-regular fa-circle-xmark"></i>
+          <i
+            class="fa-regular fa-circle-xmark"
+            onClick={() => {
+              dispatch(userActions.getToaster({ type: "", message: "" }));
+            }}
+          ></i>
         </span>
         {toasterData?.message}
       </div>
