@@ -12,7 +12,7 @@ const Toaster = () => {
     if (toasterData && toasterData?.type) {
       timer = setTimeout(() => {
         dispatch(userActions.getToaster({ type: "", message: "" }));
-      }, 1000);
+      }, 1700);
     }
     return () => {
       clearTimeout(timer);

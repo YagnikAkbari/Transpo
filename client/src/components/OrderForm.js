@@ -162,6 +162,7 @@ const OrderForm = (props) => {
                 onChange={handleInputs}
                 value={transport.transporter}
               >
+                <option value="" key="disabled"></option>
                 {props.transporterData.map((val) => {
                   return (
                     <option value={val} key={val}>
