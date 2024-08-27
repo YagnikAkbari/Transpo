@@ -6,9 +6,9 @@ import {
   loaderInit,
 } from "./components/Reducer/loginUserReducer";
 
-const initialState = {
-  loginUser: {},
-};
+// const initialState = {
+//   loginUser: {},
+// };
 
 const userReducer = function (state, dispatch) {};
 

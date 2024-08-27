@@ -1,46 +1,44 @@
 import React, { useEffect } from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
-import { ToastProvider } from "react-toast-notifications";
-
+import { useRoutes } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { getUser } from "./store/userSlice";
-import Navbar from "./components/Navbar";
-import Home from "./components/Home";
+import { authActions } from "./store/authSlice";
+
 import MLogin from "./components/MLogin";
 import TLogin from "./components/TLogin";
 import MSignup from "./components/MSignup";
 import TSignup from "./components/TSignup";
 import Profile from "./components/Profile";
-import ErrorPage from "./components/ErrorPage";
 import Logout from "./components/Logout";
+import MainLayout from "./MainLayout";
+import ErrorPage from "./components/ErrorPage";
 
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { authActions } from "./store/authSlice";
-import { useDispatch } from "react-redux";
-import Toaster from "./components/common/Toaster/Toaster";
-
-const Routing = function () {
-  return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/tlogin" element={<TLogin />} />
-      <Route path="/mlogin" element={<MLogin />} />
-      <Route path="/msignup" element={<MSignup />} />
-      <Route path="/tsignup" element={<TSignup />} />
-      <Route path="/logout" element={<Logout />} />
-      <Route path="/profile" element={<Profile />} />
-      <Route path="*" element={<ErrorPage />}></Route>
-    </Routes>
-  );
-};
+import Home from "./components/Home";
 
 const App = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const isLoggedIn = localStorage.getItem("login");
 
+  const routes = useRoutes([
+    {
+      element: <MainLayout />,
+      children: [
+        { path: "/", element: <Home /> },
+        { path: "/tlogin", element: <TLogin /> },
+        { path: "/mlogin", element: <MLogin /> },
+        { path: "/msignup", element: <MSignup /> },
+        { path: "/tsignup", element: <TSignup /> },
+        { path: "/logout", element: <Logout /> },
+        { path: "/profile", element: <Profile /> },
+        { path: "*", element: <ErrorPage /> },
+      ],
+    },
+  ]);
+
   useEffect(() => {
-    if (isLoggedIn === "true") {
+    if (isLoggedIn && isLoggedIn === "true") {
       dispatch(authActions.login());
       dispatch(
         getUser({
@@ -50,17 +48,9 @@ const App = () => {
         })
       );
     }
-  }, [isLoggedIn, dispatch, navigate]);
+  }, [isLoggedIn, dispatch]);
 
-  return (
-    <>
-      <ToastProvider>
-        <Toaster />
-        <Navbar />
-        <Routing />
-      </ToastProvider>
-    </>
-  );
+  return routes;
 };
 
 export default App;
