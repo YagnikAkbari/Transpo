@@ -430,12 +430,11 @@ input[type="submit"] {
   grid-row: 1/4;
 }
 .login-page .form-control {
-  margin: auto;
   width: 400px;
   font-size: 0.85rem;
 }
 .login-page .form-label {
-  margin: 0.9rem auto 0.55rem 1rem;
+  margin: 0.9rem auto 0.55rem 0;
   font-style: bold;
   line-height: 1.25rem;
   font-size: 0.95rem;
@@ -447,8 +446,7 @@ input[type="submit"] {
   border: none;
   color: white;
   width: 400px;
-
-  margin: 1.75rem auto;
+  margin: 1rem 0;
 }
 
 .login-footer {
@@ -566,8 +564,7 @@ input[type="submit"] {
   position: absolute;
   top: 25px;
   right: 25px;
-  border-radius: 0 4px 4px 0;
-  height: 75px;
+  border-radius: 0 4px 4px 0;  
   width: 500px;
   background: var(--toaster-bg);
   border-left: 3px solid var(--toaster-text);

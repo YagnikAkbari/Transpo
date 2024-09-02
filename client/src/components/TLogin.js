@@ -6,9 +6,11 @@ const TLogin = () => {
   const {
     email,
     password,
+    showPassword,
     loginFunction,
     emailChangeHandler,
     passwordChangeHandler,
+    showPasswordHandler,
   } = useLogin({ url: "/tsignin" });
 
   return (
@@ -32,7 +34,7 @@ const TLogin = () => {
             Password
           </label>
           <input
-            type="password"
+            type={showPassword ? "text" : "password" }
             className="form-control"
             id="password"
             name="password"
@@ -41,6 +43,15 @@ const TLogin = () => {
             placeholder="Password"
             autoComplete="off"
           />
+          <div className="d-flex gap-2 pt-3">
+            <input
+              type="checkbox"
+              id="show_password"              
+              checked={showPassword}
+              onClick={showPasswordHandler}
+            />
+            <label htmlFor="show_password">Show Passowrd</label>
+          </div>
           <input
             className="btn btn-primary"
             type="submit"
