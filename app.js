@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const cors = require('cors');
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 
@@ -11,8 +12,11 @@ require("./db/conn");
 
 app.use(express.json());
 app.use(cookieParser());
+// Enable CORS to allow requests from port 3000
+app.use(cors({
+  origin: 'http://localhost:3000', // Allow requests from your frontend
+}));
 app.use(require("./router/auth"));
-console.log('process.env', process.env);
 
 if (process.env.NODE_ENV === "production") {
   const path = require("path");

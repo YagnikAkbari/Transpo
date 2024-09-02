@@ -2,9 +2,13 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useToasts } from "react-toast-notifications";
 import { toastConfig } from "./utiles/config";
+import { useDispatch } from "react-redux";
+import { userActions } from "../store/userSlice";
 
 const TSignup = () => {
   const history = useNavigate();
+  const dispatch = useDispatch();
+
   const [user, setUser] = useState({
     uname: "",
     email: "",
@@ -26,7 +30,7 @@ const TSignup = () => {
     e.preventDefault();
     const { uname, email, phone, vehicleId, password, cpassword } = user;
 
-    const res = await fetch("/tregister", {
+    const res = await fetch("http://localhost:5000/tregister", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -43,8 +47,13 @@ const TSignup = () => {
 
     const data = await res.json();
 
-    if (res.status === 422 || !data) {
-      addToast(data.message, { appearance: "error", ...toastConfig });
+    if (res.status === 422 || !data) {      
+      dispatch(
+        userActions.getToaster({
+          type: "error",
+          message: data?.errors?.map((item) => Object?.values(item)).join("\n"),
+        })
+      );
     } else {
       addToast(data.message, { appearance: "success", ...toastConfig });
       history("/tlogin");

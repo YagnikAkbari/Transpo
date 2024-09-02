@@ -2,6 +2,7 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const router = express.Router();
 const authentication = require("../middleware/authentication");
+const { ValidationCheck } = require("../helpers");
 
 require("../db/conn");
 const Manufacturer = require("../model/manufacturerSchema");
@@ -12,16 +13,36 @@ router.post("/tregister", async (req, res) => {
   const { uname, email, phone, password, cpassword, vehicleId } = req.body;
 
   if (!uname || !email || !phone || !password || !cpassword || !vehicleId) {
-    return res.status(422).json({ message: "Pleaase fill data properly." });
+    return res
+      .status(422)
+      .json({
+        message: "Pleaase fill data properly.",
+        errors: ValidationCheck(
+          { uname, email, phone, password, cpassword, vehicleId },
+          "uname",
+          "email",
+          "password",
+          "phone",
+          "password",
+          "cpassword",
+          "vehicleId"
+        ),
+      });
   }
 
   try {
     const transporterExist = await Transporter.findOne({ email: email });
 
     if (transporterExist) {
-      return res.status(422).json({ message: "Email alreadyy Exist" });
+      return res.status(422).json({
+        message: "Email alreadyy Exist",
+        errors: [{ email: "Email already exits." }],
+      });
     } else if (password != cpassword) {
-      return res.status(422).json({ message: "password not matched!" });
+      return res.status(422).json({
+        message: "password not matched!",
+        errors: [{ password: "password not matched!" }],
+      });
     } else {
       const transporter = new Transporter({
         uname,
@@ -29,14 +50,16 @@ router.post("/tregister", async (req, res) => {
         phone,
         vehicleId,
         password,
-        cpassword,
         userType: "TRANSPORTER",
       });
-
+      // console.log("transporter", transporter);
+      
       await transporter.save();
       res.status(201).json({ message: "User registered successfully." });
     }
   } catch (err) {
+    console.log("eorrr", err);
+    
     res.send(500).json({ message: "Something went Wrong. (Server Error)" });
   }
 });
@@ -79,7 +102,10 @@ router.post("/tsignin", async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).json({ message: "Enter Proper details" });
+    return res.status(400).json({
+      message: "Enter Proper Details",
+      errors: ValidationCheck({ email, password }, "email", "password"),
+    });
   }
   let token;
   try {
@@ -99,10 +125,16 @@ router.post("/tsignin", async (req, res) => {
       if (isPasswordMatch) {
         res.status(200).json({ message: "User Login Successful." });
       } else {
-        res.status(400).json({ message: "Invalid credentials" });
+        return res.status(400).json({
+          message: "Enter Proper Details",
+          errors: [{ password: "Invalid Password." }],
+        });
       }
     } else {
-      res.status(400).json({ message: "Email is not register with us" });
+      res.status(400).json({
+        message: "Email is not register with us",
+        errors: [{ password: "Email is not register with us" }],
+      });
     }
   } catch (err) {
     res.send(500).json({ message: "Something went Wrong. (Server Error)" });
@@ -112,10 +144,18 @@ router.post("/tsignin", async (req, res) => {
 // login for manufacturer
 router.post("/msignin", async (req, res) => {
   const { email, password } = req.body;
+  console.log("cors", email, password);
 
   if (!email || !password) {
-    return res.status(400).json({ message: "Enter Proper details" });
+    // const missingKeys = ValidationCheck(email, password);
+    // console.log("missingKeys", missingKeys);
+
+    return res.status(400).json({
+      message: "Enter Proper Details",
+      // errors: missingKeys,
+    });
   }
+
   let token;
   try {
     const userLogin = await Manufacturer.findOne({ email: email });
@@ -238,3 +278,5 @@ router.get("/getMReply", authentication, async function (req, res) {
 });
 
 module.exports = router;
+
+// module.exports = ValidationCheck;
