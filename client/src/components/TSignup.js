@@ -54,8 +54,13 @@ const TSignup = () => {
           message: data?.errors?.map((item) => Object?.values(item)).join("\n"),
         })
       );
-    } else {
-      addToast(data.message, { appearance: "success", ...toastConfig });
+    } else {      
+      dispatch(
+        userActions.getToaster({
+          type: "success",
+          message: data.message,
+        })
+      );
       history("/tlogin");
     }
   };
@@ -111,7 +116,7 @@ const TSignup = () => {
           />
 
           <label htmlFor="vehicle-id" className="form-label">
-            Phone
+            Vehicle Number
           </label>
           <input
             type="text"

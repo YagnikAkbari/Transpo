@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useToasts } from "react-toast-notifications";
 import { toastConfig } from "./utiles/config";
+import { userActions } from "../store/userSlice";
+import { useDispatch } from "react-redux";
 
 const MSignup = () => {
   const history = useNavigate();
+  const dispatch = useDispatch();
   const [user, setUser] = useState({
     uname: "",
     email: "",
@@ -27,7 +30,7 @@ const MSignup = () => {
   const postData = async (e) => {
     e.preventDefault();
     const { uname, email, phone, password, cpassword, address } = user;
-    const res = await fetch("/mregister", {
+    const res = await fetch("http://localhost:5000/mregister", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -44,9 +47,19 @@ const MSignup = () => {
 
     const data = await res.json();
     if (res.status === 422 || !data) {
-      addToast(data.message, { appearance: "error", ...toastConfig });
+      dispatch(
+        userActions.getToaster({
+          type: "error",
+          message: data?.errors?.map((item) => Object?.values(item)).join("\n"),
+        })
+      );
     } else {
-      addToast(data.message, { appearance: "success", ...toastConfig });
+      dispatch(
+        userActions.getToaster({
+          type: "success",
+          message: data.message,
+        })
+      );
       history("/mlogin");
     }
   };
@@ -100,7 +113,7 @@ const MSignup = () => {
             value={user.phone}
             onChange={handleInputs}
           />
-          <label htmlFor="phone" className="form-label">
+          <label htmlFor="Address" className="form-label">
             Address
           </label>
           <input
