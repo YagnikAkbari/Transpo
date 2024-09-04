@@ -13,21 +13,19 @@ router.post("/tregister", async (req, res) => {
   const { uname, email, phone, password, cpassword, vehicleId } = req.body;
 
   if (!uname || !email || !phone || !password || !cpassword || !vehicleId) {
-    return res
-      .status(422)
-      .json({
-        message: "Pleaase fill data properly.",
-        errors: ValidationCheck(
-          { uname, email, phone, password, cpassword, vehicleId },
-          "uname",
-          "email",
-          "password",
-          "phone",
-          "password",
-          "cpassword",
-          "vehicleId"
-        ),
-      });
+    return res.status(422).json({
+      message: "Pleaase fill data properly.",
+      errors: ValidationCheck(
+        { uname, email, phone, password, cpassword, vehicleId },
+        "uname",
+        "email",
+        "password",
+        "phone",
+        "password",
+        "cpassword",
+        "vehicleId"
+      ),
+    });
   }
 
   try {
@@ -52,15 +50,14 @@ router.post("/tregister", async (req, res) => {
         password,
         userType: "TRANSPORTER",
       });
-      // console.log("transporter", transporter);
-      
+
       await transporter.save();
-      res.status(201).json({ message: "User registered successfully." });
+      return res.status(201).json({ message: "User registered successfully." });
     }
   } catch (err) {
-    console.log("eorrr", err);
-    
-    res.send(500).json({ message: "Something went Wrong. (Server Error)" });
+    return res
+      .send(500)
+      .json({ message: "Something went Wrong. (Server Error)" });
   }
 });
 
@@ -68,33 +65,58 @@ router.post("/tregister", async (req, res) => {
 router.post("/mregister", async (req, res) => {
   const { uname, email, phone, password, cpassword, address } = req.body;
 
+  // Check for missing fields
   if (!uname || !email || !phone || !password || !cpassword || !address) {
-    return res.status(422).json({ message: "Please fill data properly." });
+    return res.status(422).json({
+      message: "Please fill data properly.",
+      errors: ValidationCheck(
+        { uname, email, phone, password, cpassword, address },
+        "uname",
+        "email",
+        "password",
+        "phone",
+        "password",
+        "cpassword",
+        "address"
+      ),
+    });
   }
 
   try {
+    // Check if the manufacturer already exists
     const manufacturerExist = await Manufacturer.findOne({ email: email });
 
     if (manufacturerExist) {
-      return res.status(422).json({ message: "Email already Exist..." });
-    } else if (password != cpassword) {
-      return res.status(422).json({ message: "password not matched!" });
-    } else {
-      const manufacturer = new Manufacturer({
-        uname,
-        email,
-        phone,
-        address,
-        password,
-        cpassword,
-        userType: "MANUFACTURER",
+      return res.status(422).json({
+        message: "Email already exists...",
+        errors: [{ email: "Email already exists." }],
       });
-
-      await manufacturer.save();
-      res.status(201).json({ message: "User registered successfully." });
     }
+
+    // Check if passwords match
+    if (password !== cpassword) {
+      return res.status(422).json({
+        message: "Passwords do not match!",
+        errors: [{ password: "Passwords do not match!" }],
+      });
+    }
+
+    // Create a new manufacturer
+    const manufacturer = new Manufacturer({
+      uname,
+      email,
+      phone,
+      address,
+      password,
+      userType: "MANUFACTURER",
+    });
+
+    await manufacturer.save();
+    return res.status(201).json({ message: "User registered successfully." });
   } catch (err) {
-    res.send(500).json({ message: "Something went Wrong. (Server Error)" });
+    return res
+      .status(500)
+      .json({ message: "Something went wrong. (Server Error)" });
   }
 });
 
@@ -147,12 +169,9 @@ router.post("/msignin", async (req, res) => {
   console.log("cors", email, password);
 
   if (!email || !password) {
-    // const missingKeys = ValidationCheck(email, password);
-    // console.log("missingKeys", missingKeys);
-
     return res.status(400).json({
       message: "Enter Proper Details",
-      // errors: missingKeys,
+      errors: ValidationCheck({ email, password }, "email", "password"),
     });
   }
 
@@ -174,10 +193,16 @@ router.post("/msignin", async (req, res) => {
       if (isPasswordMatch) {
         res.status(200).json({ mssage: "User Login Successful." });
       } else {
-        res.status(400).json({ message: "Invalid credentials" });
+        return res.status(400).json({
+          message: "Enter Proper Details",
+          errors: [{ password: "Invalid Password." }],
+        });
       }
     } else {
-      res.status(400).json({ message: "Email is not register with us" });
+      res.status(400).json({
+        message: "Email is not register with us",
+        errors: [{ password: "Email is not register with us" }],
+      });
     }
   } catch (err) {
     res.send(500).json({ message: "Something went Wrong. (Server Error)" });
