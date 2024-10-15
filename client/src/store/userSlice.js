@@ -42,6 +42,7 @@ export const getUser = (config) => {
         user = {
           uname: user.uname,
           phone: user.phone,
+          email: user.email,
           address: user.address,
           userType: user.userType,
           replies: user.repelies,
@@ -51,6 +52,7 @@ export const getUser = (config) => {
         user = {
           uname: user.uname,
           phone: user.phone,
+          email: user.email,
           vehicleId: user.vehicleId,
           userType: user.userType,
           orders: user.orders,

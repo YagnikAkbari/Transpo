@@ -144,6 +144,7 @@ const OrderForm = (props) => {
                 onChange={handleInputs}
                 value={transport.quantity}
               >
+                <option value="" disabled selected>Select Qty</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -161,7 +162,8 @@ const OrderForm = (props) => {
                 id="transporter"
                 onChange={handleInputs}
                 value={transport.transporter}
-              >
+              
+              ><option value="" disabled selected>Select Transporter</option>
                 {props.transporterData.map((val) => {
                   return (
                     <option value={val} key={val}>
